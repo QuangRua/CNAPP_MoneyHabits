@@ -46,16 +46,6 @@
 
 ---
 
-## 🖼️ Giao diện ứng dụng
-
-| Trang chủ | Thống kê  | Ngân sách |
-| --------- | --------- | --------- |
-| Dashboard | Analytics | Budget    |
-
-> Thêm ảnh chụp màn hình vào thư mục `/screenshots`.
-
----
-
 ## 🛠️ Công nghệ sử dụng
 
 ### Frontend
