@@ -7,10 +7,11 @@
 
 ### 📒 Quản lý thu chi thông minh
 
-* Ghi lại thu nhập và chi tiêu nhanh chóng
-* Phân loại giao dịch theo danh mục
-* Hỗ trợ ghi chú và gắn thẻ giao dịch
-* Lịch sử giao dịch rõ ràng, dễ theo dõi
+**Quản lý chi tiêu qua hình ảnh (Core Feature):** Thay vì nhập liệu thủ công nhàm chán, bạn có thể chụp ảnh hóa đơn, món ăn hoặc sản phẩm để ghi nhận chi tiêu một cách trực quan.
+*   **Giao diện tối giản & Hiện đại:** Mang lại cảm giác mượt mà, thân thiện và dễ sử dụng nhất.
+*   **Thống kê trực quan:** Biểu đồ phân tích luồng tiền, giúp bạn dễ dàng theo dõi xem tiền của mình đã "đi đâu về đâu" theo tuần, tháng.
+*   **Bảo mật dữ liệu tuyệt đối:** Mọi dữ liệu hình ảnh và chi tiêu cá nhân đều được mã hóa và lưu trữ an toàn, đảm bảo quyền riêng tư của người dùng.
+*   **Tốc độ tối ưu:** Ghi chép chi tiêu chỉ trong vòng "3 giây" với luồng thao tác được tinh chỉnh gọn gàng.
 
 ### 📊 Thống kê tài chính trực quan
 
