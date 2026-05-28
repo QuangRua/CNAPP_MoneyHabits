@@ -147,11 +147,8 @@ Mọi đóng góp đều được chào đón! Hãy tạo issue hoặc gửi pul
 
 ---
 
-
----
-
 ## 👨‍💻 Tác giả
 
-Được xây dựng với ❤️ bởi **Tên của bạn**
+Được xây dựng với ❤️ bởi TAK Team
 
 Nếu bạn thấy dự án hữu ích, hãy cho một ⭐ trên GitHub!
