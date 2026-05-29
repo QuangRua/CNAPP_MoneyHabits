@@ -150,6 +150,6 @@ Mọi đóng góp đều được chào đón! Hãy tạo issue hoặc gửi pul
 
 ## 👨‍💻 Tác giả
 
-Được xây dựng với ❤️ bởi TAK Team
+Được xây dựng với ❤️ bởi Hk2A Team
 
 Nếu bạn thấy dự án hữu ích, hãy cho một ⭐ trên GitHub!
