@@ -1,5 +1,15 @@
 # 💰 MoneyHabits — Ứng dụng Quản Lý Chi Tiêu Cá Nhân 
 
+> ## 📱 Mobile boilerplate — [Issue #4](https://github.com/QuangRua/CNAPP_MoneyHabits/issues/4) ✅
+>
+> **Mã nguồn mobile đã push lên `main`** trong thư mục **[`mobile/`](./mobile/)** (React Native + Expo, Hello World, routing, Zustand).
+>
+> | | Link |
+> |---|---|
+> | Thư mục code | https://github.com/QuangRua/CNAPP_MoneyHabits/tree/main/mobile |
+> | Commit | https://github.com/QuangRua/CNAPP_MoneyHabits/commit/22ec1d9 |
+> | Chạy app | `cd mobile && npm install && npm start` |
+
 **MoneyFlow** là ứng dụng quản lý tài chính cá nhân giúp bạn theo dõi thu nhập, chi tiêu và xây dựng thói quen quản lý tiền hiệu quả. Được thiết kế với giao diện tối giản, trực quan và dễ sử dụng, ứng dụng giúp bạn hiểu rõ dòng tiền của mình mỗi ngày.
 
 
@@ -121,24 +131,25 @@ MoneyFlow được xây dựng với mục tiêu giúp mọi người quản lý
 Clone dự án:
 
 ```bash
-git clone https://github.com/your-username/moneyflow.git
+git clone https://github.com/QuangRua/CNAPP_MoneyHabits.git
+cd CNAPP_MoneyHabits/mobile
 ```
 
 Cài đặt dependencies:
 
 ```bash
 npm install
-# hoặc
-flutter pub get
 ```
 
-Chạy dự án:
+Chạy ứng dụng mobile (Expo):
 
 ```bash
-npm run dev
-# hoặc
-flutter run
+npm start
+# Android emulator: nhấn a
+# iOS simulator (macOS): nhấn i
 ```
+
+Xem hướng dẫn chi tiết trong [`mobile/README.md`](./mobile/README.md).
 
 ---
 
