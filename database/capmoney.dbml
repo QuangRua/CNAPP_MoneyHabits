@@ -1,0 +1,54 @@
+Table users {
+  id uuid [pk]
+  full_name varchar(100)
+  email varchar(150) [unique]
+  password_hash text
+  avatar_url text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table categories {
+  id uuid [pk]
+  user_id uuid
+  name varchar(100)
+  icon varchar(100)
+  color varchar(30)
+  type varchar(20)
+  created_at timestamp
+}
+
+Table budgets {
+  id uuid [pk]
+  user_id uuid
+  category_id uuid
+  amount numeric(12,2)
+  start_date date
+  end_date date
+  created_at timestamp
+}
+
+Table transactions {
+  id uuid [pk]
+  user_id uuid
+  category_id uuid
+  amount numeric(12,2)
+  transaction_type varchar(20)
+  description text
+  transaction_date timestamp
+  created_at timestamp
+}
+
+Table transaction_images {
+  id uuid [pk]
+  transaction_id uuid
+  image_url text
+  uploaded_at timestamp
+}
+
+Ref: categories.user_id > users.id
+Ref: budgets.user_id > users.id
+Ref: budgets.category_id > categories.id
+Ref: transactions.user_id > users.id
+Ref: transactions.category_id > categories.id
+Ref: transaction_images.transaction_id > transactions.id
