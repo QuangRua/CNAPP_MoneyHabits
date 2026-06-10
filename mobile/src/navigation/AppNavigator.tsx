@@ -4,6 +4,9 @@ import { useMemo } from 'react';
 
 import { HomeScreen } from '@/screens/HomeScreen';
 import { SplashScreen } from '@/screens/SplashScreen';
+import { WelcomeScreen } from '@/screens/WelcomeScreen';
+import { LoginScreen } from '@/screens/LoginScreen';
+import { RegisterScreen } from '@/screens/RegisterScreen';
 import { useThemeStore } from '@/state_management/themeStore';
 import { darkColors, lightColors } from '@/theme/colors';
 
@@ -35,19 +38,34 @@ export function AppNavigator() {
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
-          headerShown: true,
-          animation: 'fade',
+          headerShown: false,
+          animation: 'slide_from_right',
         }}
       >
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
+          options={{ headerShown: false, animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{ headerShown: false, animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Home' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
