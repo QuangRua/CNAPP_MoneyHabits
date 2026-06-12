@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { DashboardScreen } from '@/screens/DashboardScreen';
 import { LoginScreen } from '@/screens/LoginScreen';
 import { SplashScreen } from '@/screens/SplashScreen';
+import { TransactionHistoryScreen } from '@/screens/TransactionHistoryScreen';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/state_management/authStore';
 import { useThemeStore } from '@/state_management/themeStore';
@@ -28,7 +29,7 @@ export function AppNavigator() {
   useEffect(() => {
     if (isHydrated && !isAuthenticated) {
       const currentRoute = navigationRef.getCurrentRoute()?.name;
-      if (currentRoute === 'Dashboard') {
+      if (currentRoute === 'Dashboard' || currentRoute === 'TransactionHistory') {
         navigateToLogin();
       }
     }
@@ -72,6 +73,11 @@ export function AppNavigator() {
           name="Dashboard"
           component={DashboardScreen}
           options={{ title: 'Dashboard', headerBackVisible: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="TransactionHistory"
+          component={TransactionHistoryScreen}
+          options={{ title: 'Lich su giao dich' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

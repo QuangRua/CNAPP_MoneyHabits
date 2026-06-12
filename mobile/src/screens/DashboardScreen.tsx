@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HelloWorldCard } from '@/components/HelloWorldCard';
 import { PrimaryButton } from '@/components/PrimaryButton';
+import { RootStackParamList } from '@/navigation/types';
 import { helloService } from '@/services/helloService';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/state_management/authStore';
@@ -15,6 +18,8 @@ export function DashboardScreen() {
   const [message, setMessage] = useState('Xin chào!');
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const user = useAuthStore((s) => s.user);
   const colorScheme = useThemeStore((s) => s.colorScheme);
   const toggleColorScheme = useThemeStore((s) => s.toggleColorScheme);
@@ -52,6 +57,10 @@ export function DashboardScreen() {
         </View>
 
         <View style={{ marginTop: spacing.xl, gap: spacing.md }}>
+          <PrimaryButton
+            label="Lich su giao dich"
+            onPress={() => navigation.navigate('TransactionHistory')}
+          />
           <PrimaryButton label="Toggle theme" onPress={toggleColorScheme} />
           <PrimaryButton
             label="Đăng xuất"
