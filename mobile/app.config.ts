@@ -26,7 +26,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: 'com.helloworld.mobile',
   },
   scheme: 'helloworld',
-  plugins: ['expo-asset', 'expo-font', 'expo-secure-store'],
+  plugins: [
+    'expo-asset',
+    'expo-font',
+    'expo-secure-store',
+    [
+      'expo-image-picker',
+      {
+        photosPermission: 'Ứng dụng cần quyền truy cập thư viện ảnh để tải lên hóa đơn.',
+        cameraPermission: 'Ứng dụng cần quyền truy cập camera để chụp ảnh hóa đơn.'
+      }
+    ]
+  ],
   extra: {
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://api.example.com',
     appEnv: process.env.EXPO_PUBLIC_APP_ENV ?? 'development',

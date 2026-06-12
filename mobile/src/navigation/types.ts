@@ -3,5 +3,6 @@ export type RootStackParamList = {
   Login: { sessionMessage?: string } | undefined;
   Dashboard: undefined;
   TransactionHistory: undefined;
+  ImagePreview: { imageUri: string };
   Home: undefined;
 };
