@@ -6,7 +6,7 @@ import uploadRoutes from './routes/upload.routes';
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +16,8 @@ app.use('/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
