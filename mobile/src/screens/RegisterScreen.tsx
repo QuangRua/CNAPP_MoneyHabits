@@ -11,6 +11,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,118 +19,118 @@ import { useThemeStore } from '@/state_management/themeStore';
 import { darkTheme, lightTheme } from '@/theme';
 import type { RootStackParamList } from '@/navigation/types';
 import { Ionicons } from '@expo/vector-icons';
-import { ApiError } from '@/services/apiClient';
-import { authService } from '@/services/authService';
-import { OFFLINE_MESSAGE } from '@/utils/network';
-import { ActivityIndicator } from 'react-native';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
-export function LoginScreen({ navigation }: Props) {
+export function RegisterScreen({ navigation }: Props) {
   const colorScheme = useThemeStore((s) => s.colorScheme);
   const { colors, spacing } = colorScheme === 'dark' ? darkTheme : lightTheme;
 
   // Form states
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  // Validation states
+  const [securePassword, setSecurePassword] = useState(true);
+  const [secureConfirmPassword, setSecureConfirmPassword] = useState(true);
+
+  // Validation errors
+  const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [formError, setFormError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [hasSubmittedOnce, setHasSubmittedOnce] = useState(false);
 
   // Email format regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Real-time validation handler
-  const validateFields = (currentEmail: string, currentPassword: string, showErrors: boolean) => {
+  const validateFields = (
+    cName: string,
+    cEmail: string,
+    cPassword: string,
+    cConfirmPassword: string,
+    showErrors: boolean
+  ) => {
+    let isNameOk = true;
     let isEmailOk = true;
     let isPasswordOk = true;
+    let isConfirmOk = true;
 
-    // Validate email
-    if (!currentEmail.trim()) {
+    // Validate Name
+    if (!cName.trim()) {
+      if (showErrors) setNameError('Họ và tên không được để trống');
+      isNameOk = false;
+    } else {
+      setNameError('');
+    }
+
+    // Validate Email
+    if (!cEmail.trim()) {
       if (showErrors) setEmailError('Email không được để trống');
       isEmailOk = false;
-    } else if (!emailRegex.test(currentEmail.trim())) {
+    } else if (!emailRegex.test(cEmail.trim())) {
       if (showErrors) setEmailError('Email không đúng định dạng (VD: example@mail.com)');
       isEmailOk = false;
     } else {
       setEmailError('');
     }
 
-    // Validate password
-    if (!currentPassword) {
+    // Validate Password
+    if (!cPassword) {
       if (showErrors) setPasswordError('Mật khẩu không được để trống');
       isPasswordOk = false;
-    } else if (currentPassword.length < 6) {
+    } else if (cPassword.length < 6) {
       if (showErrors) setPasswordError('Mật khẩu phải chứa ít nhất 6 ký tự');
       isPasswordOk = false;
     } else {
       setPasswordError('');
     }
+
+    // Validate Confirm Password
+    if (!cConfirmPassword) {
+      if (showErrors) setConfirmPasswordError('Vui lòng xác nhận lại mật khẩu');
+      isConfirmOk = false;
+    } else if (cConfirmPassword !== cPassword) {
+      if (showErrors) setConfirmPasswordError('Mật khẩu xác nhận không trùng khớp');
+      isConfirmOk = false;
+    } else {
+      setConfirmPasswordError('');
+    }
   };
 
   // Run validation on inputs change
   useEffect(() => {
-    validateFields(email, password, hasSubmittedOnce);
-  }, [email, password, hasSubmittedOnce]);
+    validateFields(name, email, password, confirmPassword, hasSubmittedOnce);
+  }, [name, email, password, confirmPassword, hasSubmittedOnce]);
 
-  const handleLogin = async () => {
+  const handleRegister = () => {
     setHasSubmittedOnce(true);
     
+    let isNameOk = true;
     let isEmailOk = true;
     let isPasswordOk = true;
+    let isConfirmOk = true;
 
-    if (!email.trim()) {
-      setEmailError('Email không được để trống');
-      isEmailOk = false;
-    } else if (!emailRegex.test(email.trim())) {
-      setEmailError('Email không đúng định dạng (VD: example@mail.com)');
-      isEmailOk = false;
-    }
+    if (!name.trim()) isNameOk = false;
+    if (!email.trim() || !emailRegex.test(email.trim())) isEmailOk = false;
+    if (!password || password.length < 6) isPasswordOk = false;
+    if (!confirmPassword || confirmPassword !== password) isConfirmOk = false;
 
-    if (!password) {
-      setPasswordError('Mật khẩu không được để trống');
-      isPasswordOk = false;
-    } else if (password.length < 6) {
-      setPasswordError('Mật khẩu phải chứa ít nhất 6 ký tự');
-      isPasswordOk = false;
-    }
-
-    if (!isEmailOk || !isPasswordOk) {
-      return;
-    }
-
-    Keyboard.dismiss();
-    setLoading(true);
-    setFormError('');
-
-    try {
-      await authService.login({
-        email: email.trim(),
-        password,
-      });
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Dashboard' }],
-      });
-    } catch (error) {
-      if (error instanceof ApiError) {
-        if (error.status === 0) {
-          setFormError(OFFLINE_MESSAGE);
-        } else if (error.status === 401) {
-          setFormError('Email hoặc mật khẩu không đúng');
-        } else {
-          setFormError(error.message || 'Đăng nhập thất bại, vui lòng thử lại');
-        }
-      } else {
-        setFormError('Đăng nhập thất bại, vui lòng thử lại');
-      }
-    } finally {
-      setLoading(false);
+    if (isNameOk && isEmailOk && isPasswordOk && isConfirmOk) {
+      Keyboard.dismiss();
+      Alert.alert(
+        'Đăng ký thành công',
+        'Tài khoản của bạn đã được khởi tạo. Hãy đăng nhập để tiếp tục.',
+        [
+          {
+            text: 'Đăng nhập ngay',
+            onPress: () => {
+              navigation.navigate('Login');
+            },
+          },
+        ]
+      );
     }
   };
 
@@ -157,17 +158,48 @@ export function LoginScreen({ navigation }: Props) {
               </Pressable>
             </View>
 
-            {/* Title / Description */}
+            {/* Header Text */}
             <View style={styles.titleContainer}>
-              <Text style={[styles.title, { color: colors.onBackground }]}>Chào mừng trở lại!</Text>
+              <Text style={[styles.title, { color: colors.onBackground }]}>Đăng ký tài khoản</Text>
               <Text style={[styles.subtitle, { color: colors.outline }]}>
-                Đăng nhập để tiếp tục theo dõi chi tiêu của bạn
+                Tham gia MoneyHabits để quản lý ví của bạn tốt hơn
               </Text>
             </View>
 
             {/* Form */}
             <View style={styles.formContainer}>
-              {/* Email Input */}
+              {/* Full Name */}
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.onBackground }]}>Họ và tên</Text>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    {
+                      borderColor: nameError ? '#ff4d4f' : colors.outline,
+                      backgroundColor: colorScheme === 'dark' ? '#2c2c2e' : '#f9f9fb',
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name="person-outline"
+                    size={20}
+                    color={nameError ? '#ff4d4f' : colors.outline}
+                    style={styles.inputIcon}
+                  />
+                  <TextInput
+                    style={[styles.input, { color: colors.onBackground }]}
+                    placeholder="Nhập họ và tên của bạn..."
+                    placeholderTextColor={colors.outline}
+                    value={name}
+                    onChangeText={setName}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+                {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+              </View>
+
+              {/* Email */}
               <View style={styles.inputGroup}>
                 <Text style={[styles.label, { color: colors.onBackground }]}>Địa chỉ Email</Text>
                 <View
@@ -199,7 +231,7 @@ export function LoginScreen({ navigation }: Props) {
                 {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
               </View>
 
-              {/* Password Input */}
+              {/* Password */}
               <View style={styles.inputGroup}>
                 <Text style={[styles.label, { color: colors.onBackground }]}>Mật khẩu</Text>
                 <View
@@ -219,20 +251,20 @@ export function LoginScreen({ navigation }: Props) {
                   />
                   <TextInput
                     style={[styles.input, { color: colors.onBackground }]}
-                    placeholder="Nhập mật khẩu..."
+                    placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)..."
                     placeholderTextColor={colors.outline}
                     value={password}
                     onChangeText={setPassword}
-                    secureTextEntry={secureTextEntry}
+                    secureTextEntry={securePassword}
                     autoCapitalize="none"
                     autoCorrect={false}
                   />
                   <Pressable
-                    onPress={() => setSecureTextEntry(!secureTextEntry)}
+                    onPress={() => setSecurePassword(!securePassword)}
                     style={styles.eyeBtn}
                   >
                     <Ionicons
-                      name={secureTextEntry ? 'eye-off-outline' : 'eye-outline'}
+                      name={securePassword ? 'eye-off-outline' : 'eye-outline'}
                       size={20}
                       color={colors.outline}
                     />
@@ -241,48 +273,71 @@ export function LoginScreen({ navigation }: Props) {
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
               </View>
 
-              {/* Forgot Password Link */}
-              <Pressable style={styles.forgotPassword}>
-                <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>
-                  Quên mật khẩu?
-                </Text>
-              </Pressable>
-
-              {/* Form Error */}
-              {formError ? (
-                <Text style={[styles.errorText, { marginBottom: 12, textAlign: 'center' }]}>
-                  {formError}
-                </Text>
-              ) : null}
+              {/* Confirm Password */}
+              <View style={styles.inputGroup}>
+                <Text style={[styles.label, { color: colors.onBackground }]}>Xác nhận mật khẩu</Text>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    {
+                      borderColor: confirmPasswordError ? '#ff4d4f' : colors.outline,
+                      backgroundColor: colorScheme === 'dark' ? '#2c2c2e' : '#f9f9fb',
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name="lock-closed-outline"
+                    size={20}
+                    color={confirmPasswordError ? '#ff4d4f' : colors.outline}
+                    style={styles.inputIcon}
+                  />
+                  <TextInput
+                    style={[styles.input, { color: colors.onBackground }]}
+                    placeholder="Nhập lại mật khẩu..."
+                    placeholderTextColor={colors.outline}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={secureConfirmPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <Pressable
+                    onPress={() => setSecureConfirmPassword(!secureConfirmPassword)}
+                    style={styles.eyeBtn}
+                  >
+                    <Ionicons
+                      name={secureConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                      size={20}
+                      color={colors.outline}
+                    />
+                  </Pressable>
+                </View>
+                {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
+              </View>
 
               {/* Submit Button */}
               <Pressable
-                onPress={handleLogin}
-                disabled={loading}
+                onPress={handleRegister}
                 style={({ pressed }) => [
                   styles.submitBtn,
                   {
                     backgroundColor: colors.primary,
-                    opacity: pressed || loading ? 0.85 : 1,
+                    opacity: pressed ? 0.9 : 1,
                     marginTop: spacing.md,
                   },
                 ]}
               >
-                {loading ? (
-                  <ActivityIndicator color={colors.onPrimary} />
-                ) : (
-                  <Text style={[styles.submitBtnText, { color: colors.onPrimary }]}>Đăng nhập</Text>
-                )}
+                <Text style={[styles.submitBtnText, { color: colors.onPrimary }]}>Đăng ký</Text>
               </Pressable>
             </View>
 
-            {/* Switch to Register footer */}
+            {/* Switch to Login footer */}
             <View style={styles.footerRow}>
               <Text style={[styles.footerText, { color: colors.outline }]}>
-                Chưa có tài khoản?{' '}
+                Đã có tài khoản?{' '}
               </Text>
-              <Pressable onPress={() => navigation.navigate('Register')}>
-                <Text style={[styles.footerLinkText, { color: colors.primary }]}>Đăng ký ngay</Text>
+              <Pressable onPress={() => navigation.navigate('Login')}>
+                <Text style={[styles.footerLinkText, { color: colors.primary }]}>Đăng nhập</Text>
               </Pressable>
             </View>
           </ScrollView>
@@ -316,8 +371,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleContainer: {
-    marginTop: 20,
-    marginBottom: 32,
+    marginTop: 10,
+    marginBottom: 24,
   },
   title: {
     fontSize: 28,
@@ -332,7 +387,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   label: {
     fontSize: 14,
@@ -364,14 +419,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontWeight: '500',
     paddingLeft: 4,
-  },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 24,
-  },
-  forgotPasswordText: {
-    fontSize: 14,
-    fontWeight: '600',
   },
   submitBtn: {
     height: 54,

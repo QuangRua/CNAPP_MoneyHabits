@@ -5,6 +5,8 @@ import { useEffect, useMemo } from 'react';
 import { DashboardScreen } from '@/screens/DashboardScreen';
 import { LoginScreen } from '@/screens/LoginScreen';
 import { SplashScreen } from '@/screens/SplashScreen';
+import { WelcomeScreen } from '@/screens/WelcomeScreen';
+import { RegisterScreen } from '@/screens/RegisterScreen';
 import { TransactionHistoryScreen } from '@/screens/TransactionHistoryScreen';
 import { ImagePreviewScreen } from '@/screens/ImagePreviewScreen';
 import { authService } from '@/services/authService';
@@ -66,9 +68,19 @@ export function AppNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{ headerShown: false, animation: 'fade' }}
+        />
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Dashboard"
