@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  Alert,
   ActivityIndicator,
   Image,
   Pressable,
@@ -9,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -168,6 +170,37 @@ export function TransactionHistoryScreen() {
     [colors, spacing, typography.caption],
   );
 
+  const handleDeleteTransaction = useCallback(
+    async (id: string) => {
+      try {
+        await transactionService.deleteTransaction(id);
+        // Optimistic UI update
+        setTransactions((prev) => prev.filter((t) => t.id !== id));
+      } catch (err) {
+        Alert.alert('Lỗi', 'Không thể xoá giao dịch này. Vui lòng thử lại.');
+      }
+    },
+    []
+  );
+
+  const confirmDelete = useCallback(
+    (id: string) => {
+      Alert.alert(
+        'Xoá giao dịch',
+        'Bạn có chắc chắn muốn xoá khoản chi này?',
+        [
+          { text: 'Hủy', style: 'cancel' },
+          {
+            text: 'Xoá',
+            style: 'destructive',
+            onPress: () => handleDeleteTransaction(id),
+          },
+        ]
+      );
+    },
+    [handleDeleteTransaction]
+  );
+
   const renderItem = useCallback(
     ({ item }: { item: Transaction }) => {
       const thumbnailUrl = getThumbnailUrl(item);
@@ -177,63 +210,78 @@ export function TransactionHistoryScreen() {
         .filter(Boolean)
         .join(' - ');
 
-      return (
-        <View
-          style={[
-            styles.transactionRow,
-            {
-              backgroundColor: colors.surface,
-              borderBottomColor: colors.outline,
-              paddingHorizontal: spacing.lg,
-              paddingVertical: spacing.md,
-            },
-          ]}
-        >
-          {thumbnailUrl ? (
-            <Image source={{ uri: thumbnailUrl }} style={styles.thumbnail} />
-          ) : (
-            <View
-              style={[
-                styles.thumbnailFallback,
-                { backgroundColor: colors.primary },
-              ]}
-            >
-              <Text style={[styles.thumbnailText, { color: colors.onPrimary }]}>
-                {title.charAt(0).toUpperCase()}
-              </Text>
-            </View>
-          )}
+      const renderRightActions = () => {
+        return (
+          <Pressable
+            style={[styles.deleteButton, { backgroundColor: colors.error }]}
+            onPress={() => confirmDelete(item.id)}
+          >
+            <Text style={[styles.deleteButtonText, { color: '#FFFFFF' }]}>
+              Xoá
+            </Text>
+          </Pressable>
+        );
+      };
 
-          <View style={styles.transactionInfo}>
-            <Text
-              numberOfLines={1}
-              style={[styles.transactionTitle, { color: colors.onSurface }]}
-            >
-              {title}
-            </Text>
-            <Text
-              numberOfLines={1}
-              style={[typography.caption, { marginTop: spacing.xs }]}
-            >
-              {subtitle}
-            </Text>
-            {item.note && item.merchant ? (
+      return (
+        <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
+          <View
+            style={[
+              styles.transactionRow,
+              {
+                backgroundColor: colors.surface,
+                borderBottomColor: colors.outline,
+                paddingHorizontal: spacing.lg,
+                paddingVertical: spacing.md,
+              },
+            ]}
+          >
+            {thumbnailUrl ? (
+              <Image source={{ uri: thumbnailUrl }} style={styles.thumbnail} />
+            ) : (
+              <View
+                style={[
+                  styles.thumbnailFallback,
+                  { backgroundColor: colors.primary },
+                ]}
+              >
+                <Text style={[styles.thumbnailText, { color: colors.onPrimary }]}>
+                  {title.charAt(0).toUpperCase()}
+                </Text>
+              </View>
+            )}
+
+            <View style={styles.transactionInfo}>
+              <Text
+                numberOfLines={1}
+                style={[styles.transactionTitle, { color: colors.onSurface }]}
+              >
+                {title}
+              </Text>
               <Text
                 numberOfLines={1}
                 style={[typography.caption, { marginTop: spacing.xs }]}
               >
-                {item.note}
+                {subtitle}
               </Text>
-            ) : null}
-          </View>
+              {item.note && item.merchant ? (
+                <Text
+                  numberOfLines={1}
+                  style={[typography.caption, { marginTop: spacing.xs }]}
+                >
+                  {item.note}
+                </Text>
+              ) : null}
+            </View>
 
-          <Text style={[styles.amount, { color: colors.error }]}>
-            -{currencyFormatter.format(getAmount(item))}
-          </Text>
-        </View>
+            <Text style={[styles.amount, { color: colors.error }]}>
+              -{currencyFormatter.format(getAmount(item))}
+            </Text>
+          </View>
+        </Swipeable>
       );
     },
-    [colors, spacing, typography.caption],
+    [colors, spacing, typography.caption, confirmDelete],
   );
 
   if (loading) {
@@ -396,5 +444,15 @@ const styles = StyleSheet.create({
   retryText: {
     fontSize: 15,
     fontWeight: '700',
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    height: '100%',
+  },
+  deleteButtonText: {
+    fontWeight: '700',
+    fontSize: 16,
   },
 });

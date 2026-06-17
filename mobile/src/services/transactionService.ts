@@ -66,13 +66,25 @@ function normalizeTransactions(response: TransactionsResponse): Transaction[] {
   return Array.isArray(response) ? response : response.data;
 }
 
+const USE_MOCK = process.env.EXPO_PUBLIC_USE_MOCK === 'true';
+
 export const transactionService = {
   async fetchTransactions(): Promise<Transaction[]> {
-    try {
-      const response = await apiClient<TransactionsResponse>('/transactions');
-      return normalizeTransactions(response);
-    } catch {
-      return mockTransactions;
+    if (USE_MOCK) {
+      console.warn('DEV ONLY: Using mock transactions');
+      return [...mockTransactions]; // return copy
     }
+
+    const response = await apiClient<TransactionsResponse>('/transactions');
+    return normalizeTransactions(response);
+  },
+
+  async deleteTransaction(id: string): Promise<void> {
+    if (USE_MOCK) {
+      console.warn(`DEV ONLY: Mock delete transaction ${id}`);
+      return;
+    }
+
+    await apiClient(`/transactions/${id}`, { method: 'DELETE' });
   },
 };
