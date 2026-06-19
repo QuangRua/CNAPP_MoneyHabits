@@ -10,7 +10,7 @@
 > | Commit | https://github.com/QuangRua/CNAPP_MoneyHabits/commit/22ec1d9 |
 > | Chạy app | `cd mobile && npm install && npm start` |
 
-**MoneyFlow** là ứng dụng quản lý tài chính cá nhân giúp bạn theo dõi thu nhập, chi tiêu và xây dựng thói quen quản lý tiền hiệu quả. Được thiết kế với giao diện tối giản, trực quan và dễ sử dụng, ứng dụng giúp bạn hiểu rõ dòng tiền của mình mỗi ngày.
+**MoneyHabits** là ứng dụng quản lý tài chính cá nhân giúp bạn theo dõi thu nhập, chi tiêu và xây dựng thói quen quản lý tiền hiệu quả. Được thiết kế với giao diện tối giản, trực quan và dễ sử dụng, ứng dụng giúp bạn hiểu rõ dòng tiền của mình mỗi ngày.
 
 
 ## ✨ Tính năng nổi bật
@@ -109,7 +109,7 @@
 ## 📂 Cấu trúc dự án
 
 ```bash
-moneyflow-app/
+moneyhabits-app/
 │── mobile/
 │── backend/
 │── docs/
@@ -122,7 +122,7 @@ moneyflow-app/
 
 ## 🎯 Mục tiêu sản phẩm
 
-MoneyFlow được xây dựng với mục tiêu giúp mọi người quản lý tài chính cá nhân một cách **đơn giản, trực quan và hiệu quả**, từ đó tạo ra thói quen chi tiêu hợp lý và đạt được mục tiêu tài chính cá nhân.
+MoneyHabits được xây dựng với mục tiêu giúp mọi người quản lý tài chính cá nhân một cách **đơn giản, trực quan và hiệu quả**, từ đó tạo ra thói quen chi tiêu hợp lý và đạt được mục tiêu tài chính cá nhân.
 
 ---
 
