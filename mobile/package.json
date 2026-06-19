@@ -1,6 +1,6 @@
 {
-  "name": "hello-world-mobile",
-  "version": "1.0.0",
+  "name": "moneyflow-mobile",
+  "version": "0.1.0",
   "private": true,
   "main": "index.js",
   "scripts": {
